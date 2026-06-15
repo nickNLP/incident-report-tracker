@@ -19,6 +19,13 @@ type Incident = {
   preventable: boolean | null
   description: string | null
   corrective_action: string | null
+  product_type: string | null
+  spill_volume_litres: number | null
+  spill_location: string | null
+  reported_to_authority: boolean | null
+  authority_name: string | null
+  authority_ref: string | null
+  authority_reported_at: string | null
   created_at: string
   incident_type: { label: string } | null
   reported_to:   { label: string } | null
@@ -51,6 +58,8 @@ export default async function IncidentDetailPage({ params }: { params: Promise<{
       .from('incidents')
       .select(`
         id, date, status, preventable, description, corrective_action, created_at,
+        product_type, spill_volume_litres, spill_location, reported_to_authority,
+        authority_name, authority_ref, authority_reported_at,
         incident_type:lookup_options!incident_type_id(label),
         reported_to:lookup_options!reported_to_id(label),
         dispatcher:lookup_options!dispatcher_id(label),
@@ -109,6 +118,9 @@ export default async function IncidentDetailPage({ params }: { params: Promise<{
         <div className="flex items-center justify-between">
           <h1 className="text-xl font-bold text-gray-900">Incident — {formatDate(incident.date)}</h1>
           <div className="flex items-center gap-2">
+            <Link href={`/incidents/${id}/print`} className="text-xs font-medium border border-gray-300 text-gray-600 hover:border-brand-600 hover:text-brand-700 rounded-md px-3 py-1.5 transition-colors">
+              Print / PDF
+            </Link>
             {profile?.role === 'manager' && (
               <Link href={`/incidents/${id}/edit`} className="text-xs font-medium border border-gray-300 text-gray-600 hover:border-brand-600 hover:text-brand-700 rounded-md px-3 py-1.5 transition-colors">
                 Edit
@@ -143,6 +155,42 @@ export default async function IncidentDetailPage({ params }: { params: Promise<{
           <div className="bg-white rounded-xl border border-gray-100 p-5 space-y-1">
             <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">Corrective Action</p>
             <p className="text-sm text-gray-800 whitespace-pre-wrap">{incident.corrective_action}</p>
+          </div>
+        )}
+
+        {(incident.product_type ||
+          incident.spill_volume_litres != null ||
+          incident.spill_location ||
+          incident.reported_to_authority != null ||
+          incident.authority_name ||
+          incident.authority_ref ||
+          incident.authority_reported_at) && (
+          <div className="bg-white rounded-xl border border-gray-100 p-5 space-y-3">
+            <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">Spill / Regulatory</p>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+              <Detail label="Product" value={incident.product_type} />
+              <Detail
+                label="Volume"
+                value={incident.spill_volume_litres != null ? `${incident.spill_volume_litres} L` : undefined}
+              />
+              <Detail label="Location" value={incident.spill_location} />
+              <Detail
+                label="Reported to Authority"
+                value={
+                  incident.reported_to_authority === null
+                    ? undefined
+                    : incident.reported_to_authority
+                    ? 'Yes'
+                    : 'No'
+                }
+              />
+              <Detail label="Authority / Agency" value={incident.authority_name} />
+              <Detail label="Authority Ref #" value={incident.authority_ref} />
+              <Detail
+                label="Date Reported"
+                value={incident.authority_reported_at ? formatDate(incident.authority_reported_at) : undefined}
+              />
+            </div>
           </div>
         )}
 

@@ -15,6 +15,14 @@ export async function submitIncident(
 
   const date = formData.get('date') as string
   const str = (key: string) => (formData.get(key) as string) || null
+  const num = (key: string) => {
+    const v = formData.get(key) as string
+    return v ? Number(v) : null
+  }
+  const tri = (key: string) => {
+    const v = formData.get(key)
+    return v === 'true' ? true : v === 'false' ? false : null
+  }
 
   if (!date)                        return { error: 'Date is required.' }
   if (!str('incident_type_id'))     return { error: 'Type of Incident is required.' }
@@ -39,6 +47,13 @@ export async function submitIncident(
       customer_id: str('customer_id'),
       description: str('description'),
       corrective_action: str('corrective_action'),
+      product_type: str('product_type'),
+      spill_volume_litres: num('spill_volume_litres'),
+      spill_location: str('spill_location'),
+      reported_to_authority: tri('reported_to_authority'),
+      authority_name: str('authority_name'),
+      authority_ref: str('authority_ref'),
+      authority_reported_at: str('authority_reported_at'),
       submitted_by: userId,
     })
     .select('id')

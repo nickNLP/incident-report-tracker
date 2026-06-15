@@ -5,6 +5,7 @@ import { editIncident } from './actions'
 import Link from 'next/link'
 import { notFound, redirect } from 'next/navigation'
 import { DatePicker } from '@/app/submit/DatePicker'
+import { SpillFields } from '@/app/submit/SpillFields'
 
 const inputClass = 'w-full border border-gray-300 rounded-lg px-3 py-3 text-base bg-white focus:outline-none focus:ring-2 focus:ring-brand-600'
 
@@ -143,6 +144,18 @@ export default async function EditIncidentPage({
           <label className="block text-sm font-medium text-gray-700">Corrective Action</label>
           <textarea name="corrective_action" rows={4} defaultValue={incident.corrective_action ?? ''} className={`${inputClass} resize-none`} />
         </div>
+
+        <SpillFields
+          defaults={{
+            product_type: incident.product_type,
+            spill_volume_litres: incident.spill_volume_litres,
+            spill_location: incident.spill_location,
+            reported_to_authority: incident.reported_to_authority,
+            authority_name: incident.authority_name,
+            authority_ref: incident.authority_ref,
+            authority_reported_at: incident.authority_reported_at,
+          }}
+        />
 
         <div className="fixed bottom-0 left-0 right-0 p-4 bg-white border-t border-gray-100 shadow-lg flex gap-3">
           <Link href={`/incidents/${id}`} className="flex-1 text-center border border-gray-300 text-gray-700 py-4 rounded-xl text-lg font-semibold hover:bg-gray-50 transition-colors">

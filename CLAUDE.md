@@ -34,6 +34,7 @@ Mobile-first web app for drivers, dispatchers, and managers to submit and review
 | `/dashboard` | All authenticated | Incident list with filters, search, pagination, inline status update |
 | `/incidents/[id]` | All authenticated | Detail view; dispatchers/managers manage status + notes; drivers see notes read-only |
 | `/incidents/[id]/edit` | Manager only | Edit all fields of a submitted incident |
+| `/incidents/[id]/print` | All authenticated | Printable full report; "Print / Save as PDF" via browser (`@media print`) |
 | `/profile` | All authenticated | View role, update display name; drivers see incident stats |
 | `/admin` | Manager only | Manage drivers, customers, lookup options |
 | `/api/export` | Manager only | CSV download of incidents |
@@ -43,7 +44,7 @@ Mobile-first web app for drivers, dispatchers, and managers to submit and review
 - `lookup_options` — all dropdowns; categories: `incident_type`, `reported_to`, `dispatcher`, `root_cause`
 - `drivers` — admin-managed, `is_active` flag
 - `customers` — admin-managed, `is_active` flag, optional `province`
-- `incidents` — main table; status: open / in_review / closed; `submitted_by` = auth.uid()
+- `incidents` — main table; status: open / in_review / closed; `submitted_by` = auth.uid(). Spill/regulatory columns (all nullable): `product_type`, `spill_volume_litres`, `spill_location`, `reported_to_authority`, `authority_name`, `authority_ref`, `authority_reported_at`
 - `incident_photos` — references Storage bucket `incident-photos`; path: `{incident_id}/{timestamp-random}.ext`
 - `incident_notes` — dispatcher/manager notes, `author_id` references auth.users; drivers can read notes on their own incidents
 
@@ -189,6 +190,13 @@ Dispatchers hard-deleted with confirmation dialog.
 - **Driver notes**: drivers can now read dispatcher/manager notes on their own incidents (add-note still gated to dispatcher/manager)
 - **Custom date picker**: `DatePicker` component shows "May 15, 2026" format, opens native calendar on click
 
+### Stage 12 — Compliance: spill fields + PDF
+- **Spill/regulatory fields**: added nullable columns to `incidents` (`product_type`, `spill_volume_litres`, `spill_location`, `reported_to_authority`, `authority_name`, `authority_ref`, `authority_reported_at`)
+- **Shared `SpillFields` component** (`app/submit/SpillFields.tsx`): collapsible `<details>` block reused by submit + edit forms; opens by default when data exists
+- Wired through `submitIncident` + `editIncident` actions; detail page shows a "Spill / Regulatory" card when any field is set
+- **Print/PDF**: `/incidents/[id]/print` route — clean full-report layout, "Print / Save as PDF" button (`PrintButton.tsx`, `window.print()`), `@media print` hides chrome via `.no-print`. No new dependencies.
+- Requires DB migration (see schema.sql / ALTER TABLE) before submit/edit will accept the new fields
+
 ---
 
 ## To-Do
@@ -203,8 +211,6 @@ Dispatchers hard-deleted with confirmation dialog.
 ### Planned
 
 - **"New since last visit" indicator** — Badge on dashboard showing incidents added/updated since last login; store `last_seen_at` in profiles or localStorage
-
-- **Print / PDF view** — Clean printable layout of a full incident report for insurance or compliance; could be a `/incidents/[id]/print` route with `@media print` CSS
 
 - **Incident report signature** — Allow drivers to digitally sign/acknowledge their submitted report (simple checkbox + timestamp stored on incident)
 

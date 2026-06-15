@@ -3,6 +3,7 @@
 import { useActionState } from 'react'
 import { submitIncident, type SubmitState } from '@/app/actions/submitIncident'
 import { DatePicker } from './DatePicker'
+import { SpillFields } from './SpillFields'
 
 type Option = { id: string; label: string }
 type Driver = { id: string; full_name: string }
@@ -144,6 +145,8 @@ export default function IncidentForm({ incidentTypes, reportedToOptions, dispatc
           className={`${inputClass} resize-none`}
         />
       </Field>
+
+      <SpillFields />
 
       <div className="fixed bottom-0 left-0 right-0 p-4 bg-white border-t border-gray-100 shadow-lg">
         <button
