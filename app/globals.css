@@ -10,13 +10,18 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  /* Northern Lights Petroleum brand green */
+  --color-brand-50:  #eaf4ee;
+  --color-brand-100: #d0e8d9;
+  --color-brand-200: #b7dfc8;
+  --color-brand-300: #74C69D;
+  --color-brand-400: #52B788;
+  --color-brand-500: #3a9a6e;
+  --color-brand-600: #2D6A4F;
+  --color-brand-700: #2D6A4F;
+  --color-brand-800: #1F4D39;
+  --color-brand-900: #142B1E;
 }
 
 body {

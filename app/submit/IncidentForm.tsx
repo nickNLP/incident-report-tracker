@@ -2,6 +2,7 @@
 
 import { useActionState } from 'react'
 import { submitIncident, type SubmitState } from '@/app/actions/submitIncident'
+import { DatePicker } from './DatePicker'
 
 type Option = { id: string; label: string }
 type Driver = { id: string; full_name: string }
@@ -15,9 +16,10 @@ type Props = {
   drivers: Driver[]
   customers: Customer[]
   userId: string | null
+  defaultDriverId: string | null
 }
 
-const initialState: SubmitState = { error: null, success: false }
+const initialState: SubmitState = { error: null }
 
 function Field({ label, required, children }: { label: string; required?: boolean; children: React.ReactNode }) {
   return (
@@ -30,7 +32,7 @@ function Field({ label, required, children }: { label: string; required?: boolea
   )
 }
 
-const inputClass = 'w-full border border-gray-300 rounded-lg px-3 py-3 text-base bg-white focus:outline-none focus:ring-2 focus:ring-blue-500'
+const inputClass = 'w-full border border-gray-300 rounded-lg px-3 py-3 text-base bg-white focus:outline-none focus:ring-2 focus:ring-brand-600'
 
 function SelectField({ name, options, placeholder, required }: { name: string; options: Option[]; placeholder: string; required?: boolean }) {
   return (
@@ -43,27 +45,9 @@ function SelectField({ name, options, placeholder, required }: { name: string; o
   )
 }
 
-export default function IncidentForm({ incidentTypes, reportedToOptions, dispatchers, rootCauses, drivers, customers, userId }: Props) {
+export default function IncidentForm({ incidentTypes, reportedToOptions, dispatchers, rootCauses, drivers, customers, userId, defaultDriverId }: Props) {
   const submitWithUser = submitIncident.bind(null, userId)
   const [state, formAction, pending] = useActionState(submitWithUser, initialState)
-
-  if (state.success) {
-    return (
-      <div className="min-h-screen flex items-center justify-center p-6">
-        <div className="text-center">
-          <div className="text-6xl mb-4">✓</div>
-          <h2 className="text-2xl font-bold text-green-600 mb-2">Report Submitted</h2>
-          <p className="text-gray-500 mb-8">Your incident has been recorded.</p>
-          <a
-            href="/submit"
-            className="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold text-base"
-          >
-            Submit Another
-          </a>
-        </div>
-      </div>
-    )
-  }
 
   return (
     <form action={formAction} className="max-w-lg mx-auto px-4 pt-6 pb-28 space-y-5">
@@ -76,13 +60,7 @@ export default function IncidentForm({ incidentTypes, reportedToOptions, dispatc
       )}
 
       <Field label="Date" required>
-        <input
-          name="date"
-          type="date"
-          required
-          defaultValue={new Date().toISOString().split('T')[0]}
-          className={inputClass}
-        />
+        <DatePicker defaultValue={new Date().toISOString().split('T')[0]} />
       </Field>
 
       <Field label="Type of Incident" required>
@@ -94,7 +72,7 @@ export default function IncidentForm({ incidentTypes, reportedToOptions, dispatc
       </Field>
 
       <Field label="Driver" required>
-        <select name="driver_id" required className={inputClass}>
+        <select name="driver_id" required defaultValue={defaultDriverId ?? ''} className={inputClass}>
           <option value="">Select driver...</option>
           {drivers.map((d) => (
             <option key={d.id} value={d.id}>{d.full_name}</option>
@@ -115,7 +93,7 @@ export default function IncidentForm({ incidentTypes, reportedToOptions, dispatc
           {['Yes', 'No'].map((label, i) => (
             <label
               key={label}
-              className="flex-1 flex items-center justify-center border border-gray-300 rounded-lg py-3 cursor-pointer has-[:checked]:border-blue-500 has-[:checked]:bg-blue-50"
+              className="flex-1 flex items-center justify-center border border-gray-300 rounded-lg py-3 cursor-pointer has-[:checked]:border-brand-600 has-[:checked]:bg-brand-50"
             >
               <input
                 type="radio"
@@ -154,9 +132,8 @@ export default function IncidentForm({ incidentTypes, reportedToOptions, dispatc
           type="file"
           multiple
           accept="image/*"
-          className="w-full border border-gray-300 rounded-lg px-3 py-3 text-base text-gray-500 file:mr-3 file:py-1 file:px-3 file:rounded file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-600"
+          className="w-full border border-gray-300 rounded-lg px-3 py-3 text-base text-gray-500 file:mr-3 file:py-1 file:px-3 file:rounded file:border-0 file:text-sm file:font-medium file:bg-brand-50 file:text-brand-700"
         />
-        <p className="text-xs text-gray-400 mt-1">Photo upload activates after login is set up.</p>
       </Field>
 
       <Field label="Corrective Action">
@@ -172,7 +149,7 @@ export default function IncidentForm({ incidentTypes, reportedToOptions, dispatc
         <button
           type="submit"
           disabled={pending}
-          className="w-full bg-blue-600 text-white py-4 rounded-xl text-lg font-semibold disabled:opacity-50"
+          className="w-full bg-brand-700 hover:bg-brand-800 text-white py-4 rounded-xl text-lg font-semibold disabled:opacity-50 transition-colors"
         >
           {pending ? 'Submitting…' : 'Submit Report'}
         </button>
