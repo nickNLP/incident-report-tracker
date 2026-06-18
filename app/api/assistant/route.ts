@@ -3,6 +3,7 @@ import { serverSupabase } from '@/lib/supabase/server'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
+export const maxDuration = 60 // allow the streamed AI response time to complete
 
 // Manager-only AI assistant over the incident history. Streams a Claude
 // response as plain-text chunks. Demo feature — read-only analysis, no writes.

@@ -89,7 +89,7 @@ export default async function IncidentDetailPage({ params }: { params: Promise<{
     const { data: signed } = await supabase.storage
       .from('incident-photos')
       .createSignedUrls(photos.map((p) => p.storage_path), 3600)
-    signedUrls = (signed ?? []).map((s) => s.signedUrl)
+    signedUrls = (signed ?? []).map((s) => s.signedUrl).filter((u): u is string => !!u)
   }
   const status = statusConfig[incident.status as keyof typeof statusConfig]
 

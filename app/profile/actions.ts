@@ -9,14 +9,14 @@ export async function updateProfile(formData: FormData) {
   if (!user) redirect('/login')
 
   const full_name = (formData.get('full_name') as string).trim()
-  if (!full_name) return { error: 'Name is required.' }
+  if (!full_name) redirect('/profile?toast=Name+is+required')
 
   const { error } = await supabase
     .from('profiles')
     .update({ full_name })
     .eq('id', user.id)
 
-  if (error) return { error: error.message }
+  if (error) redirect(`/profile?toast=${encodeURIComponent(error.message)}`)
 
   redirect('/profile?toast=Profile+updated')
 }
