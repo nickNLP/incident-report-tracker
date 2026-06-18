@@ -69,26 +69,29 @@ export function AssistantChat() {
     busy && messages.length > 0 && messages[messages.length - 1].role === 'assistant' && messages[messages.length - 1].content === ''
 
   return (
-    <section className="bg-white rounded-xl border border-gray-100 overflow-hidden">
-      <div className="px-5 py-4 border-b border-gray-100 flex items-center gap-2">
-        <span className="inline-flex h-7 w-7 items-center justify-center rounded-lg bg-brand-50 text-brand-700 text-sm">✦</span>
+    <section
+      className="rounded-xl overflow-hidden shadow-md text-white"
+      style={{ background: 'linear-gradient(135deg, #2D6A4F, #1F4D39)' }}
+    >
+      <div className="px-5 py-4 border-b border-white/15 flex items-center gap-2.5">
+        <span className="inline-flex h-7 w-7 items-center justify-center rounded-lg bg-white/15 text-white text-sm">✦</span>
         <div>
-          <h2 className="text-base font-semibold text-gray-900">AI Assistant</h2>
-          <p className="text-xs text-gray-400">Ask about incident history or what to prioritize — analyzes all logs.</p>
+          <h2 className="text-base font-semibold text-white">AI Assistant</h2>
+          <p className="text-xs text-white/70">Ask about incident history or what to prioritize. Analyzes all logs.</p>
         </div>
       </div>
 
       <div ref={scrollRef} className="max-h-96 overflow-y-auto px-5 py-4 space-y-4">
         {messages.length === 0 ? (
           <div className="space-y-3">
-            <p className="text-sm text-gray-500">Try a question:</p>
+            <p className="text-sm text-white/80">Try a question:</p>
             <div className="flex flex-wrap gap-2">
               {SUGGESTIONS.map((s) => (
                 <button
                   key={s}
                   type="button"
                   onClick={() => send(s)}
-                  className="text-left text-sm border border-gray-200 hover:border-brand-600 hover:bg-brand-50 text-gray-700 rounded-lg px-3 py-2 transition-colors"
+                  className="text-left text-sm border border-white/30 hover:bg-white/10 text-white rounded-lg px-3 py-2 transition-colors"
                 >
                   {s}
                 </button>
@@ -101,8 +104,8 @@ export function AssistantChat() {
               <div
                 className={
                   m.role === 'user'
-                    ? 'max-w-[85%] rounded-2xl rounded-br-sm bg-brand-700 text-white px-4 py-2.5 text-sm whitespace-pre-wrap'
-                    : 'max-w-[85%] rounded-2xl rounded-bl-sm bg-gray-100 text-gray-900 px-4 py-2.5 text-sm whitespace-pre-wrap'
+                    ? 'max-w-[85%] rounded-2xl rounded-br-sm bg-white/15 border border-white/20 text-white px-4 py-2.5 text-sm whitespace-pre-wrap'
+                    : 'max-w-[85%] rounded-2xl rounded-bl-sm bg-white text-gray-900 shadow-sm px-4 py-2.5 text-sm whitespace-pre-wrap'
                 }
               >
                 {m.content || (lastAssistantEmpty && i === messages.length - 1 ? <span className="text-gray-400">Analyzing the logs…</span> : m.content)}
@@ -117,19 +120,19 @@ export function AssistantChat() {
           e.preventDefault()
           send(input)
         }}
-        className="flex gap-2 px-5 py-4 border-t border-gray-100 bg-gray-50"
+        className="flex gap-2 px-5 py-4 border-t border-white/15 bg-black/10"
       >
         <input
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="Ask about the incident history…"
           disabled={busy}
-          className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-brand-600 disabled:opacity-60"
+          className="flex-1 border border-white/30 rounded-lg px-3 py-2 text-sm bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-white/60 disabled:opacity-60"
         />
         <button
           type="submit"
           disabled={busy || !input.trim()}
-          className="bg-brand-700 hover:bg-brand-800 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors disabled:opacity-50"
+          className="bg-white text-brand-800 hover:bg-emerald-50 px-4 py-2 rounded-lg text-sm font-semibold transition-colors disabled:opacity-50"
         >
           {busy ? '…' : 'Send'}
         </button>

@@ -24,7 +24,9 @@ const SYSTEM_PROMPT = `You are the AI assistant inside Northern Lights Petroleum
 
 You are given a snapshot of the incident dataset below. Use ONLY that data to answer. When asked for predictions or what to fix, reason from the patterns in the data (frequent types, recurring root causes, preventable rate, repeat drivers/customers) and give concrete, prioritized, actionable recommendations. Be specific and cite the numbers you're drawing from.
 
-Keep answers concise and skimmable — short paragraphs or tight bullet lists. If the data is too sparse to support a claim, say so rather than inventing incidents. This is a manager-facing internal tool; a plain, professional tone is right.`
+Keep answers concise and skimmable: short paragraphs or tight bullet lists. If the data is too sparse to support a claim, say so rather than inventing incidents. This is a manager-facing internal tool; a plain, professional tone is right.
+
+Never use em dashes (—) in your writing. Use commas, periods, colons, or parentheses instead.`
 
 function buildContext(rows: IncidentRow[]): string {
   if (rows.length === 0) return 'INCIDENT DATA: (no incidents on record yet)'
@@ -49,7 +51,7 @@ function buildContext(rows: IncidentRow[]): string {
     .slice(0, 40)
     .map((r) => {
       const desc = (r.description ?? '').replace(/\s+/g, ' ').slice(0, 90)
-      return `- ${r.date} | ${r.incident_type?.label ?? '—'} | driver: ${r.driver?.full_name ?? '—'} | customer: ${r.customer?.name ?? '—'} | root cause: ${r.root_cause?.label ?? '—'} | ${r.status} | preventable: ${r.preventable === null ? 'n/a' : r.preventable ? 'yes' : 'no'}${desc ? ` | ${desc}` : ''}`
+      return `- ${r.date} | ${r.incident_type?.label ?? 'n/a'} | driver: ${r.driver?.full_name ?? 'n/a'} | customer: ${r.customer?.name ?? 'n/a'} | root cause: ${r.root_cause?.label ?? 'n/a'} | ${r.status} | preventable: ${r.preventable === null ? 'n/a' : r.preventable ? 'yes' : 'no'}${desc ? ` | ${desc}` : ''}`
     })
     .join('\n')
 
