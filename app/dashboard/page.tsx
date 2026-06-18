@@ -4,6 +4,7 @@ import { formatDate } from '@/lib/format'
 import { DriverFilter } from './DriverFilter'
 import { StatusSelect } from './StatusSelect'
 import { SearchInput } from './SearchInput'
+import { AssistantChat } from './AssistantChat'
 import Link from 'next/link'
 
 const PAGE_SIZE = 25
@@ -229,6 +230,9 @@ export default async function DashboardPage({
             </div>
           ))}
         </div>
+
+        {/* AI Assistant (manager only) */}
+        {isManager && <AssistantChat />}
 
         {/* Table */}
         <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">

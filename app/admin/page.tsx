@@ -6,7 +6,6 @@ import {
   addLookupOption, toggleLookupOption, removeLookupOption,
 } from './actions'
 import { ConfirmForm } from './ConfirmForm'
-import { AssistantChat } from './AssistantChat'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 
@@ -54,9 +53,6 @@ export default async function AdminPage() {
       </header>
 
       <main className="max-w-4xl mx-auto px-4 py-6 space-y-8">
-
-        {/* AI Assistant (demo) */}
-        <AssistantChat />
 
         {/* Drivers */}
         <section className="bg-white rounded-xl border border-gray-100 overflow-hidden">
