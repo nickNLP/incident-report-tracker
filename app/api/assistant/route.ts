@@ -117,7 +117,7 @@ export async function POST(request: Request) {
     model: 'claude-opus-4-8',
     max_tokens: 2048,
     thinking: { type: 'adaptive' },
-    output_config: { effort: 'low' },
+    output_config: { effort: 'medium' },
     system: `${SYSTEM_PROMPT}\n\n${buildContext(rows)}`,
     messages,
   })
